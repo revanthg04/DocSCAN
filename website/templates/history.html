@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Comparison History{% endblock %}
+
+{% block content %}
+<h2>Comparison History</h2>
+
+{% if comparisons %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Document 1</th>
+            <th>Document 2</th>
+            <th>Similarity</th>
+            <th>Compared At</th>
+            <th>Download</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for comparison in user.comparisons %}
+        <tr>
+            <td>{{ comparison.doc1_name }}</td>
+            <td>{{ comparison.doc2_name }}</td>
+            <td>{{ comparison.similarity_score }}%</td>
+            <td>{{ comparison.compared_at }}</td>
+            <td>
+                <a href="{{ url_for('views.download', doc_id=comparison.doc2_id, doc_type=2) }}" class="btn btn-success">
+                    Download
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% endblock %}

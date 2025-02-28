@@ -1,0 +1,6 @@
+Project Implementation:
+1.set FLASK_APP=website
+  flask run
+
+2.assign admin status
+  python manage.py

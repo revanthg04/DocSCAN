@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-danger">Admin Dashboard</h1>
+
+    <!-- Admin Upload Section -->
+    <div class="card p-3 my-4 shadow-sm">
+        <h2 class="text-dark">Upload Document2 (Admin)</h2>
+        <form action="{{ url_for('views.upload_admin_document') }}" method="post" enctype="multipart/form-data">
+            <input type="file" name="file2" class="form-control mb-2" required>
+            <button type="submit" class="btn btn-success">Upload</button>
+        </form>
+    </div>
+
+    <!-- Display Uploaded Documents -->
+    <div class="card p-3 my-3 shadow-sm">
+        <h3 class="text-info">Admin Documents</h3>
+        {% if documents2 %}
+        <ul class="list-group">
+            {% for doc in documents2 %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>{{ doc.filename }}</span>
+                <div>
+                    <a href="{{ url_for('views.download', doc_id=doc.id, doc_type=2) }}" class="btn btn-sm btn-primary">
+                        Download
+                    </a>
+                    <form action="{{ url_for('views.admin_delete_document', doc_id=doc.id, doc_type=2) }}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this document?');">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted">No admin documents available yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- User Management Table -->
+    <h2 class="mt-4">User Management</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>User ID</th>
+                    <th>Email</th>
+                    <th>First Name</th>
+                    <th>Credits</th>
+                    <th>Credit Request</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.first_name }}</td>
+                    <td>{{ user.credits }}</td>
+                    <td>
+                        {% if user.id in credit_requests %}
+                        <a href="{{ url_for('views.approve_credit_request', request_id=credit_requests[user.id].id) }}" class="btn btn-sm btn-success">
+                            ✅ Approve
+                        </a>
+                        <a href="{{ url_for('views.deny_credit_request', request_id=credit_requests[user.id].id) }}" class="btn btn-sm btn-danger">
+                            ❌ Deny
+                        </a>
+                        {% else %}
+                        <span class="text-muted">No request</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
